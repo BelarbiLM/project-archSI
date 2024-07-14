@@ -75,7 +75,7 @@ class NotificationController extends AbstractController
                 'sujet' => $notification->getSujet(),
                 'recipient' => $notification->getEmailRecipient(),
                 'message' => $notification->getMessage(),
-            ]);
+            ]); 
         } else {
 
             $notifications = $repository->findAll();
