@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Billing;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -109,6 +110,20 @@ class BillingController extends AbstractController
 
             $entityManager->flush();
             // Exécute la requête
+
+            $client = HttpClient::create();
+            $notificationResponse = $client->request(
+                'POST',
+                'http://127.0.0.1:8000/sendnotif',
+                [
+                    'json' => [
+                        'sujet' => 'Billing',
+                        'recipient' => 'customer@example.com',
+                        'message' => 'Your invoice has been created.'
+                    ]
+                ]
+            );
+
 
             return new JsonResponse(['status' => 'Bill created!'], JsonResponse::HTTP_CREATED);
             // Retourner une réponse JSON indiquant le succès de l'opération

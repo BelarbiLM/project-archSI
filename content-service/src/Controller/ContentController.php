@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Content;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,6 +112,18 @@ class ContentController extends AbstractController
 
             $entityManager->flush();
             // Exécute la requête
+
+            $client = HttpClient::create();
+            $client->request('POST', 'http://127.0.0.1:8000/post/createbilling', 
+                [
+                    'json' =>
+                    [
+                        'amount' => $data['total_price'],
+                        'due_date' => (new \DateTime('+30 days'))->format('Y-m-d'),
+                        'customer_email' => $data['customer_email']
+                    ],
+                ]
+            );
 
             return new JsonResponse(['status' => 'Order created !'], JsonResponse::HTTP_CREATED);
             // Retourner une réponse JSON indiquant le succès de l'opération
