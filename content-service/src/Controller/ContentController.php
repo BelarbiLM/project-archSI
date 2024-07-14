@@ -26,19 +26,19 @@ class ContentController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Content::class)->find($data['id']);
+        $content = $entityManager->getRepository(Content::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$content) {
             return new JsonResponse(['status' => 'Order not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
 
         return new JsonResponse([
-            'id' => $post->getId(),
-            'product_id' => $post->getProductId(),
-            'quantity' => $post->getQuantity(),
-            'total_price' => $post->getTotalPrice(),
-            'customer_email' => $post->getCustomerEmail()
+            'id' => $content->getId(),
+            'product_id' => $content->getProductId(),
+            'quantity' => $content->getQuantity(),
+            'total_price' => $content->getTotalPrice(),
+            'customer_email' => $content->getCustomerEmail()
         ], JsonResponse::HTTP_OK);
         // Retourner les détails du Post sous forme de réponse JSON
     }
@@ -51,16 +51,16 @@ class ContentController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Content::class)->find($data['id']);
+        $content = $entityManager->getRepository(Content::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$content) {
             return new JsonResponse(['status' => 'Order not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
-        $post->setTitle($data['title']);
-        // Mettre à jour le titre du Post
-        $post->setContent($data['content']);
-        // Mettre à jour le contenu du Post
+        $content->setProductId($data['product_id']);
+        $content->setQuantity($data['quantity']);
+        $content->setTotalPrice($data['total_price']);
+        $content->setCustomerEmail($data['customer_email']);
         $entityManager->flush();
         // Sauvegarder les changements dans la base de données
         return new JsonResponse(['status' => 'Order updated !'], JsonResponse::HTTP_OK);
@@ -75,13 +75,13 @@ class ContentController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Content::class)->find($data['id']);
+        $content = $entityManager->getRepository(Content::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$content) {
             return new JsonResponse(['status' => 'Order not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
-        $entityManager->remove($post);
+        $entityManager->remove($content);
         // Supprimer le Post de la base de données
         $entityManager->flush();
         // Sauvegarder les changements dans la base de données
