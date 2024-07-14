@@ -27,18 +27,18 @@ class BillingController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Billing::class)->find($data['id']);
+        $bill = $entityManager->getRepository(Billing::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$bill) {
             return new JsonResponse(['status' => 'Bill not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
 
         return new JsonResponse([
-            'id' => $post->getId(),
-            'amount' => $post->getAmount(),
-            'dueDate' => $post->getDueDate(),
-            'customerEmail' => $post->getCustomerEmail()
+            'id' => $bill->getId(),
+            'amount' => $bill->getAmount(),
+            'dueDate' => $bill->getDueDate(),
+            'customerEmail' => $bill->getCustomerEmail()
         ], JsonResponse::HTTP_OK);
         // Retourner les détails du Post sous forme de réponse JSON
     }
@@ -51,16 +51,15 @@ class BillingController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Billing::class)->find($data['id']);
+        $bill = $entityManager->getRepository(Billing::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$bill) {
             return new JsonResponse(['status' => 'Bill not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
-        $post->setTitle($data['title']);
-        // Mettre à jour le titre du Post
-        $post->setContent($data['content']);
-        // Mettre à jour le contenu du Post
+        $bill->setAmount($data['amount']);
+        $bill->setDueDate($data['due_date']);
+        $bill->setCustomerEmail($data['customer_email']);
         $entityManager->flush();
         // Sauvegarder les changements dans la base de données
         return new JsonResponse(['status' => 'Bill updated!'], JsonResponse::HTTP_OK);
@@ -75,13 +74,13 @@ class BillingController extends AbstractController
         // Fonction qui sera exécutée lors de l'appel de l'endpoint
         $data = json_decode($request->getContent(), true);
         // Décoder les données JSON de la requête
-        $post = $entityManager->getRepository(Billing::class)->find($data['id']);
+        $bill = $entityManager->getRepository(Billing::class)->find($data['id']);
         // Trouver le Post par son ID
-        if (!$post) {
+        if (!$bill) {
             return new JsonResponse(['status' => 'Bill not found'], JsonResponse::HTTP_NOT_FOUND);
             // Si le Post n'existe pas, retourner une erreur 404
         }
-        $entityManager->remove($post);
+        $entityManager->remove($bill);
         // Supprimer le Post de la base de données
         $entityManager->flush();
         // Sauvegarder les changements dans la base de données
